@@ -1,0 +1,30 @@
+{
+  "name": "handa-api",
+  "version": "1.1.0",
+  "description": "Handa Api REST Web Service",
+  "main": "./main/index.js",
+  "scripts": {
+    "clean": "gradle clean",
+    "start": "node main/index.js",
+    "start-pm2": "pm2 start main/index.js --name handa-api --merge-logs --log-date-format=\"YYYY-MM-DD HH:mm:ss\" -l NULL -o logs/server.log -e logs/server.log",
+    "stop-pm2": "pm2 stop handa-api && pm2 delete handa-api",
+    "build-prod": "gradle clean buildTar -Penv=prod",
+    "test": "echo \"Error: no test specified! Configure in package.json\" && exit 1"
+  },
+  "repository": "",
+  "keywords": [
+    "pldt itidm"
+  ],
+  "author": "Barry Richardson L. Frias",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "bunyan": "1.8.1",
+    "properties": "1.2.1",
+    "request": "2.74.0",
+    "restify": "4.1.1",
+    "yield-yield": "1.3.1",
+    "xml2js": "0.4.17",
+    "oauth-token": "2.0.1"
+  }
+}

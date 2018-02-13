@@ -1,0 +1,71 @@
+group = 'com.pldt.itidm'
+version = '1.0.0'
+
+ext {
+    appName = 'handa-api'
+    environment = project.hasProperty('env')? env : 'dev'
+    println "Target environment: ${environment}"
+}
+
+apply from: 'profiles.gradle'
+
+task buildTar(type: Tar, dependsOn: ':clean') {
+    archiveName = "${appName}-${project.version}-${environment}.tar"
+    compression = Compression.NONE
+    dirMode = 0755
+
+    into(appName) {
+        from(rootDir)
+        include 'package.json'
+        fileMode = 0644
+    }
+
+    into("${appName}/main") {
+        from("main")
+        fileMode = 0644
+    }
+
+    into ("${appName}/conf") {
+            from("filtered")
+            filter org.apache.tools.ant.filters.ReplaceTokens, tokens: tokensMap[environment]
+            fileMode = 0644
+    }
+
+    into("${appName}/node_modules") {
+        from("node_modules")
+        exclude '**/*.project',
+                '**/**gradle',
+                '**/**github', 
+                '**/**settings', 
+                '**/*ignore',
+                '**/**.tar',
+                '**/**.md',
+                '**/*LICENSE',
+                '**/*license',
+                '**/*.yml',
+                '**/*bin',
+                '**/*test',
+                'build.properties',
+                'scripts',
+                '**/*.*rc'
+        fileMode = 0644
+    }
+
+    into ("${appName}/bin") {
+            from("scripts")
+            fileMode = 0755
+    }
+
+    doLast {
+        def tarFile = file "${archiveName}"
+        if(tarFile.isFile())
+        {
+            println "Succesfully created tar ${tarFile}"
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete fileTree(dir: "${rootDir}", include: ['*.tar'])
+    delete "logs"
+}

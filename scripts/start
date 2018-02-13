@@ -1,0 +1,10 @@
+#resolve the full path where this script is located
+#which is under bin directory
+SCRIPT_DIR="$(cd $(dirname "$0"); pwd)";
+
+#up one directory
+cd $SCRIPT_DIR/..;
+
+HOME_DIR=`pwd`;
+
+npm run start-pm2;

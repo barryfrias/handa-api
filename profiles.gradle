@@ -1,0 +1,30 @@
+ext {
+    tokensMap =
+    [
+        dev:
+        [
+            port: '4263',
+            "tokens.url": 'http://10.30.31.124:8653/tokens/api/verification',
+            "request.timeout": '120000',
+            serviceabilityUrl: 'http://10.35.16.88/ppgisserviceabilitywrap/SERVICEABILITY_SERVICE.svc',
+            homerewardsUrl: 'http://10.30.30.152/homerewardswcf'
+        ],
+        qa:
+        [
+            port: '4263',
+            "proxy.url": 'http://localhost:3128',
+            "tokens.url": 'http://10.30.31.124:8653/tokens/api/verification',
+            "request.timeout": '120000',
+            serviceabilityUrl: 'http://10.35.16.88/ppgisserviceabilitywrap/SERVICEABILITY_SERVICE.svc',
+            homerewardsUrl: 'http://xxxxx'
+        ],
+        prod:
+        [
+            port: '4263',
+            "tokens.url": 'http://10.30.31.148:8653/tokens/api/verification',
+            "request.timeout": '120000',
+            serviceabilityUrl: 'http://10.35.16.137/ServiceabilityBus/SERVICEABILITY_SERVICE.svc',
+            homerewardsUrl: 'http://10.30.30.78/HomeRewardsWCF',
+        ]
+    ]
+}
