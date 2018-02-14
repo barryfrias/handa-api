@@ -3,28 +3,24 @@ ext {
     [
         dev:
         [
-            port: '4263',
-            "tokens.url": 'http://10.30.31.124:8653/tokens/api/verification',
-            "request.timeout": '120000',
-            serviceabilityUrl: 'http://10.35.16.88/ppgisserviceabilitywrap/SERVICEABILITY_SERVICE.svc',
-            homerewardsUrl: 'http://10.30.30.152/homerewardswcf'
+            handaUrl: 'http://10.30.31.124:8000/handa-services',
+            "db.user": 'mobility',
+            "db.password": 'enc(Q4FqxCeGRKM6o3ktpzT2j3XWpnfNUPtmWa2HnQjkFwNuet3ctaD84r)',
+            "db.connectionString": '10.30.31.124/mobility'
         ],
         qa:
         [
-            port: '4263',
-            "proxy.url": 'http://localhost:3128',
-            "tokens.url": 'http://10.30.31.124:8653/tokens/api/verification',
-            "request.timeout": '120000',
-            serviceabilityUrl: 'http://10.35.16.88/ppgisserviceabilitywrap/SERVICEABILITY_SERVICE.svc',
-            homerewardsUrl: 'http://xxxxx'
+            handaUrl: 'http://10.30.31.124:8000/handa-services',
+            "db.user": 'mobility',
+            "db.password": 'enc(Q4FqxCeGRKM6o3ktpzT2j3XWpnfNUPtmWa2HnQjkFwNuet3ctaD84r)',
+            "db.connectionString": '10.30.31.124/mobility'
         ],
         prod:
         [
-            port: '4263',
-            "tokens.url": 'http://10.30.31.148:8653/tokens/api/verification',
-            "request.timeout": '120000',
-            serviceabilityUrl: 'http://10.35.16.137/ServiceabilityBus/SERVICEABILITY_SERVICE.svc',
-            homerewardsUrl: 'http://10.30.30.78/HomeRewardsWCF',
+            handaUrl: 'http://10.30.31.122:8000/handa-services',
+            "db.user": 'mobility',
+            "db.password": 'enc(Q4FqxCeGRKM6o3ktq4mwR8RPSiwrVa7WtQGooYKwNht2Ue1xsVsZdD)',
+            "db.connectionString": '10.30.31.120/mobility',
         ]
     ]
 }

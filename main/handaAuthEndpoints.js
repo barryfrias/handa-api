@@ -1,38 +1,98 @@
 'use strict';
 
 let o_o = require('yield-yield'),
-    restify = require('restify'),
     request = require('request'),
-    URL = require('url'),
-    utils = require('./utils.js'),
     instance = require('./server.js').instance;
 
 let httpTimeout = conf['http.timeout'];
+
+function getHandaOpts(req, url)
+{
+    let options =
+    {
+        headers:
+        {
+            "Content-Type": 'application/json'
+        },
+        url: url,
+        timeout: httpTimeout,
+        body: req.body,
+        json: true
+    };
+    return options;
+}
 
 instance.post('/handa/api/auth/authenticate', o_o(function *(req, res, next)
 {
     logger.info({time: new Date().toString(), req:req});
     try
     {
-        let options =
-        {
-            headers:
-            {
-                "Content-Type": 'application/json'
-            },
-            url: conf['handaUrl'] + '/users/authenticate',
-            timeout: httpTimeout,
-            body: req.body,
-            json: true
-        };
-
-        let response = yield request.post(options, yield);
+        let response = yield request.post(getHandaOpts(req, conf['handaUrl'] + '/users/authenticate'), yield);
 
         if(response[0].statusCode == 200)
         {
+            let tokenFromDb = 'TOKEN HERE';
             let json =
             {
-                token: 'TOKEN HERE'
+                token: tokenFromDb
+            }
+            res.send(json);
+            return next();
+        }
+
+        res.send(response[0].statusCode, response[1]);
+        return next();
+    }
+    catch(err)
+    {
+        logger.error(err);
+        return res.send(err);
+    }
+    return next();
+}));
+
+instance.post('/handa/api/auth/authenticate2', o_o(function *(req, res, next)
+{
+    logger.info({time: new Date().toString(), req:req});
+    try
+    {
+        let response = yield request.post(getHandaOpts(req, conf['handaUrl'] + '/users/authenticate2'), yield);
+
+        if(response[0].statusCode == 200)
+        {
+            let tokenFromDb = 'TOKEN HERE';
+            let json =
+            {
+                token: tokenFromDb
+            }
+            res.send(json);
+            return next();
+        }
+
+        res.send(response[0].statusCode, response[1]);
+        return next();
+    }
+    catch(err)
+    {
+        logger.error(err);
+        return res.send(err);
+    }
+    return next();
+}));
+
+instance.post('/handa/api/auth/authenticate3', o_o(function *(req, res, next)
+{
+    logger.info({time: new Date().toString(), req:req});
+    try
+    {
+        let response = yield request.post(getHandaOpts(req, conf['handaUrl'] + '/users/authenticate3'), yield);
+
+        if(response[0].statusCode == 200)
+        {
+            let tokenFromDb = 'TOKEN HERE';
+            let json =
+            {
+                token: tokenFromDb
             }
             res.send(json);
             return next();
