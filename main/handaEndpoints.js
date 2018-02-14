@@ -30,7 +30,6 @@ function getQueryPart(url)
     return (parsedURL && parsedURL.search ? parsedURL.search : '');
 }
 
-//HOMEREWARDS ROUTES
 let handaApi = /^\/handa\/api\/(.*)/;
 
 instance.get(handaApi, o_o(function *(req, res, next)

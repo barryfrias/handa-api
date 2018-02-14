@@ -19,7 +19,7 @@ let whiteListed =
 [
      /^\/handa\/api\/site\/.*/,
      /^\/handa\/api\/users\/app\/versions\/.*/,
-     /^\/handa\/api\/users\/authenticate*/,
+     /^\/handa\/api\/auth\/.*/,
      /^\/handa\/api\/users\/ldap\/search/,
      /^\/handa\/api\/users\/registration*/,
      /^\/handa\/api\/users\/verify/,

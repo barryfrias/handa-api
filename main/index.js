@@ -19,6 +19,7 @@ o_o.run(function *()
     let server = require('./server.js').instance;
     server.listen(conf['port'], '0.0.0.0', () =>
     {
+        require('./handaAuthEndpoints.js'); logger.info({time: new Date().toString()}, 'Loaded handa auth api endpoints');
         require('./handaEndpoints.js'); logger.info({time: new Date().toString()}, 'Loaded handa api endpoints');
         logger.info({time: new Date().toString()}, `${server.name} listening at ${server.url}`);
     });
