@@ -13,11 +13,38 @@ instance.use(restify.bodyParser());
 instance.use(restify.queryParser({ mapParams: true }));
 instance.use(restify.CORS());
 
-const tokenHeader = 'x-pldt-auth-token';
+const tokenHeader = 'x-handa-auth-token';
 
-//MIDDLEWARE THAT CHECKS FOR TOKEN'S VALIDITY THRU CORE TOKENS API
+let whiteListed =
+[
+     /^\/handa\/api\/site\/.*/,
+     /^\/handa\/api\/users\/app\/versions\/.*/,
+     /^\/handa\/api\/users\/authenticate*/,
+     /^\/handa\/api\/users\/ldap\/search/,
+     /^\/handa\/api\/users\/registration*/,
+     /^\/handa\/api\/users\/verify/,
+];
+
+function isWhiteListed(url)
+{
+    for(let regex of whiteListed)
+    {
+        if(url.match(regex))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+//MIDDLEWARE THAT CHECKS FOR TOKEN'S VALIDITY THRU DATABASE
 instance.pre(o_o(function *(req, res, next)
 {
+    if(isWhiteListed(req.url))
+    {
+        return next();
+    }
+
     if (!req.headers[tokenHeader])
     {
         return res.send(403, utils.outputJson('BadAuthorization', 'Missing authorization token'));
