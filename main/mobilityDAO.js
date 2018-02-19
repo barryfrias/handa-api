@@ -17,33 +17,35 @@ let getToken = o_o(function *(mobile_num)
     return result.token;
 });
 
-const VERIFY_CODE_PROC='begin roku_device.verify_code(:code, :status, :accountNumber, :emailAddress, :brand); end;';
+const CHECK_TOKEN='begin check_token(:token, :status); end;';
 
-let verifyCode = o_o(function *(params)
+let checkToken = o_o(function *(token)
 {
     let bindvars =
     {
-        code: params.code,
-        status: { type: database.oracle.STRING, dir: database.oracle.BIND_OUT },
-        accountNumber: { type: database.oracle.STRING, dir: database.oracle.BIND_OUT },
-        emailAddress: { type: database.oracle.STRING, dir: database.oracle.BIND_OUT },
-        brand: { type: database.oracle.STRING, dir: database.oracle.BIND_OUT }
+        token: token,
+        status: { type: database.oracle.NUMBER, dir: database.oracle.BIND_OUT }
     };
 
-    let result = yield database.executeProc(VERIFY_CODE_PROC, bindvars, {}, false, yield);
-    let output =
+    let result = yield database.executeProc(CHECK_TOKEN, bindvars, {}, false, yield);
+    return result.status;
+});
+
+const DELETE_TOKEN='begin delete_token(:token); end;';
+
+let deleteToken = o_o(function *(token)
+{
+    let bindvars =
     {
-        status: 200,
-        json: {message: result.status, accountNumber: result.accountNumber, emailAddress: result.emailAddress, brand: result.brand}
-    }
-    if(result.status === 'INVALID CODE')
-    {
-        output.status = 404;
-    }
-    return output;
+        token: token
+    };
+
+    let result = yield database.executeProcNoResult(DELETE_TOKEN, bindvars);
 });
 
 module.exports =
 {
-    getToken: getToken
+    getToken: getToken,
+    checkToken: checkToken,
+    deleteToken: deleteToken
 };

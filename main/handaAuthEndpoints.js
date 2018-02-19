@@ -109,3 +109,20 @@ instance.post('/handa/api/auth/authenticate3', o_o(function *(req, res, next)
     }
     return next();
 }));
+
+instance.post('/handa/api/auth/logout', o_o(function *(req, res, next)
+{
+    logger.info({time: new Date().toString(), req:req});
+    try
+    {
+        mobilityDAO.deleteToken(req.body.token);
+        res.send(200, { message: 'Ok' });
+        return next();
+    }
+    catch(err)
+    {
+        logger.error(err);
+        return res.send(err);
+    }
+    return next();
+}));

@@ -3,7 +3,8 @@
 let o_o = require('yield-yield'),
     restify = require('restify'),
     request = require('request'),
-    utils = require('./utils.js');
+    utils = require('./utils.js'),
+    mobilityDAO = require('./mobilityDAO.js');
 
 let instance = restify.createServer({ name: 'handa-api' });
 
@@ -52,30 +53,12 @@ instance.pre(o_o(function *(req, res, next)
 
     try
     {
-        let options =
-        {
-            headers:
-            {
-                'accept': 'application/json',
-                'content-type': 'application/json'
-            },
-            url: conf['tokens.url'],
-            timeout: conf['request.timeout'],
-            json: true,
-            body:
-            {
-                'appCode': 'wrapper',
-                'token': req.headers[tokenHeader]
-            }
-        };
-
-        let response = yield request.post(options, yield);
-        let statusCode = response[0].statusCode;
-        if(statusCode == 401)
+        let response = yield mobilityDAO.checkToken(req.headers[tokenHeader], yield);
+        if(response == 404)
         {
             return res.send(401, utils.outputJson('BadAuthorization', 'Authorization is not valid'));
         }
-        else if(statusCode != 200)
+        else if(response != 200)
         {
             return res.send(500, utils.outputJson('ServerError', 'Unable to validate authorization token'));
         }
