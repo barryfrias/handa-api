@@ -2,7 +2,8 @@
 
 let o_o = require('yield-yield'),
     request = require('request'),
-    instance = require('./server.js').instance;
+    instance = require('./server.js').instance,
+    mobilityDAO = require('./mobilityDAO.js');
 
 let httpTimeout = conf['http.timeout'];
 
@@ -31,7 +32,7 @@ instance.post('/handa/api/auth/authenticate', o_o(function *(req, res, next)
 
         if(response[0].statusCode == 200)
         {
-            let tokenFromDb = 'TOKEN HERE';
+            let tokenFromDb = yield mobilityDAO.getToken(req.body.mobileNumber, yield);
             let json =
             {
                 token: tokenFromDb
@@ -60,7 +61,7 @@ instance.post('/handa/api/auth/authenticate2', o_o(function *(req, res, next)
 
         if(response[0].statusCode == 200)
         {
-            let tokenFromDb = 'TOKEN HERE';
+            let tokenFromDb = yield mobilityDAO.getToken(req.body.mobileNumber, yield);
             let json =
             {
                 token: tokenFromDb
@@ -89,7 +90,7 @@ instance.post('/handa/api/auth/authenticate3', o_o(function *(req, res, next)
 
         if(response[0].statusCode == 200)
         {
-            let tokenFromDb = 'TOKEN HERE';
+            let tokenFromDb = yield mobilityDAO.getToken(req.body.mobileNumber, yield);
             let json =
             {
                 token: tokenFromDb

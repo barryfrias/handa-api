@@ -4,22 +4,22 @@ ext {
         dev:
         [
             handaUrl: 'http://10.30.31.124:8000/handa-services',
-            "db.user": 'mobility',
-            "db.password": 'enc(Q4FqxCeGRKM6o3ktpzT2j3XWpnfNUPtmWa2HnQjkFwNuet3ctaD84r)',
+            "db.user": 'handa',
+            "db.password": 'enc(6DyNxZKoPtQmVNmr64V11qCo14N5rnXsLYvAg8Q7Aq6j7Un7gmaQB)',
             "db.connectionString": '10.30.31.124/mobility'
         ],
         qa:
         [
             handaUrl: 'http://10.30.31.124:8000/handa-services',
-            "db.user": 'mobility',
-            "db.password": 'enc(Q4FqxCeGRKM6o3ktpzT2j3XWpnfNUPtmWa2HnQjkFwNuet3ctaD84r)',
+            "db.user": 'handa',
+            "db.password": 'enc(6DyNxZKoPtQmVNmr64V11qCo14N5rnXsLYvAg8Q7Aq6j7Un7gmaQB)',
             "db.connectionString": '10.30.31.124/mobility'
         ],
         prod:
         [
             handaUrl: 'http://10.30.31.122:8000/handa-services',
-            "db.user": 'mobility',
-            "db.password": 'enc(Q4FqxCeGRKM6o3ktq4mwR8RPSiwrVa7WtQGooYKwNht2Ue1xsVsZdD)',
+            "db.user": 'handa',
+            "db.password": 'enc(6DyNxZKoPtQmVNmrAf1TiAgp7TecUBw2Lvwea38hkAsWdwWPtr4qx)',
             "db.connectionString": '10.30.31.120/mobility',
         ]
     ]
