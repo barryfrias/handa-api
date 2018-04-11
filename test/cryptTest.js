@@ -7,7 +7,7 @@ o_o.run(function *()
     let crypt = require('../main/crypt.js');
 
     console.log('--------------encode--------------');
-    let val = yield crypt.encode('n3w2rb0r', yield);
+    let val = yield crypt.encode('handa01', yield);
     console.log(val);
 
     console.log('\n--------------decode--------------');

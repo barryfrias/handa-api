@@ -3,7 +3,8 @@
 let o_o = require('yield-yield'),
     restify = require('restify'),
     request = require('request'),
-    utils = require('./utils.js');
+    utils = require('./utils.js'),
+    mobilityDAO = require('./mobilityDAO.js');
 
 let instance = restify.createServer({ name: 'handa-api' });
 
@@ -13,11 +14,39 @@ instance.use(restify.bodyParser());
 instance.use(restify.queryParser({ mapParams: true }));
 instance.use(restify.CORS());
 
-const tokenHeader = 'x-pldt-auth-token';
+const tokenHeader = 'x-handa-auth-token';
 
-//MIDDLEWARE THAT CHECKS FOR TOKEN'S VALIDITY THRU CORE TOKENS API
+let whiteListed =
+[
+     /^\/handa\/api\/site\/.*/,
+     /^\/handa\/api\/users\/app\/versions\/.*/,
+     /^\/handa\/api\/auth\/.*/,
+     /^\/handa\/api\/users\/ldap\/search/,
+     /^\/handa\/api\/users\/registration*/,
+     /^\/handa\/api\/users\/verify/,
+     /^\/handa\/api\/users\/companies/
+];
+
+function isWhiteListed(url)
+{
+    for(let regex of whiteListed)
+    {
+        if(url.match(regex))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+//MIDDLEWARE THAT CHECKS FOR TOKEN'S VALIDITY THRU DATABASE
 instance.pre(o_o(function *(req, res, next)
 {
+    if(isWhiteListed(req.url))
+    {
+        return next();
+    }
+
     if (!req.headers[tokenHeader])
     {
         return res.send(403, utils.outputJson('BadAuthorization', 'Missing authorization token'));
@@ -25,30 +54,12 @@ instance.pre(o_o(function *(req, res, next)
 
     try
     {
-        let options =
-        {
-            headers:
-            {
-                'accept': 'application/json',
-                'content-type': 'application/json'
-            },
-            url: conf['tokens.url'],
-            timeout: conf['request.timeout'],
-            json: true,
-            body:
-            {
-                'appCode': 'wrapper',
-                'token': req.headers[tokenHeader]
-            }
-        };
-
-        let response = yield request.post(options, yield);
-        let statusCode = response[0].statusCode;
-        if(statusCode == 401)
+        let response = yield mobilityDAO.checkToken(req.headers[tokenHeader], yield);
+        if(response == 404)
         {
             return res.send(401, utils.outputJson('BadAuthorization', 'Authorization is not valid'));
         }
-        else if(statusCode != 200)
+        else if(response != 200)
         {
             return res.send(500, utils.outputJson('ServerError', 'Unable to validate authorization token'));
         }

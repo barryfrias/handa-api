@@ -5,7 +5,7 @@ let o_o = require('yield-yield'),
 
 let defaultOptions =
 {
-    salt: 'r3dDo0rMystery',
+    salt: 'n02Outsourc1ng',
     ttl: -1,
     checkAppSecret: function (appId, appSecret, cb) { return Promise.resolve(true) }, // Function for verifying validity of the application secret key
     checkUserSecret: function (userId, userSecret, cb) { return Promise.resolve(true) }, // Function for verifying validity of the user secret key

@@ -9,7 +9,7 @@ let o_o = require('yield-yield'),
 
 let httpTimeout = conf['http.timeout'];
 
-function getOptionsForHomeRewards(req)
+function getOptionsForHanda(req)
 {
     return {
         headers:
@@ -17,7 +17,7 @@ function getOptionsForHomeRewards(req)
             "Content-Type": 'application/json',
             "Accept": 'application/json'
         },
-        url: conf['homerewardsUrl'] + '/' + req.params[0] + getQueryPart(req.url),
+        url: conf['handaUrl'] + '/' + req.params[0] + getQueryPart(req.url),
         timeout: httpTimeout,
         json: true,
         body: req.body
@@ -30,15 +30,14 @@ function getQueryPart(url)
     return (parsedURL && parsedURL.search ? parsedURL.search : '');
 }
 
-//HOMEREWARDS ROUTES
-let homerewards = /^\/homerewards\/api\/(.*)/;
+let handaApi = /^\/handa\/api\/(.*)/;
 
-instance.post(homerewards, o_o(function *(req, res, next)
+instance.get(handaApi, o_o(function *(req, res, next)
 {
     logger.info({time: new Date().toString(), req:req});
     try
     {
-        yield request.post(getOptionsForHomeRewards(req)).pipe(res);
+        yield request.get(getOptionsForHanda(req)).pipe(res);
     }
     catch(err)
     {
@@ -48,12 +47,42 @@ instance.post(homerewards, o_o(function *(req, res, next)
     return next();
 }));
 
-instance.get(homerewards, o_o(function *(req, res, next)
+instance.post(handaApi, o_o(function *(req, res, next)
 {
     logger.info({time: new Date().toString(), req:req});
     try
     {
-        yield request.get(getOptionsForHomeRewards(req)).pipe(res);
+        yield request.post(getOptionsForHanda(req)).pipe(res);
+    }
+    catch(err)
+    {
+        utils.logError(err);
+        return res.send(err);
+    }
+    return next();
+}));
+
+instance.put(handaApi, o_o(function *(req, res, next)
+{
+    logger.info({time: new Date().toString(), req:req});
+    try
+    {
+        yield request.put(getOptionsForHanda(req)).pipe(res);
+    }
+    catch(err)
+    {
+        utils.logError(err);
+        return res.send(err);
+    }
+    return next();
+}));
+
+instance.del(handaApi, o_o(function *(req, res, next)
+{
+    logger.info({time: new Date().toString(), req:req});
+    try
+    {
+        yield request.del(getOptionsForHanda(req)).pipe(res);
     }
     catch(err)
     {
