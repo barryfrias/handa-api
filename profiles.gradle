@@ -3,24 +3,24 @@ ext {
     [
         dev:
         [
-            handaUrl: 'http://10.30.31.124:8000/handa-services',
+            handaUrl: 'http://10.40.21.150:9000/handa-services',
             "db.user": 'handa',
             "db.password": 'enc(6DyNxZKoPtQmVNmr64V11qCo14N5rnXsLYvAg8Q7Aq6j7Un7gmaQB)',
-            "db.connectionString": '10.30.31.124/mobility'
+            "db.connectionString": '10.40.23.89/corptech'
         ],
         qa:
         [
-            handaUrl: 'http://10.30.31.124:8000/handa-services',
+            handaUrl: 'http://10.40.21.150:9000/handa-services',
             "db.user": 'handa',
             "db.password": 'enc(6DyNxZKoPtQmVNmr64V11qCo14N5rnXsLYvAg8Q7Aq6j7Un7gmaQB)',
-            "db.connectionString": '10.30.31.124/mobility'
+            "db.connectionString": '10.40.23.89/corptech'
         ],
         prod:
         [
-            handaUrl: 'http://10.30.31.122:8000/handa-services',
+            handaUrl: 'http://10.40.21.59:9000/handa-services',
             "db.user": 'handa',
             "db.password": 'enc(6DyNxZKoPtQmVNmrAf1TiAgp7TecUBw2Lvwea38hkAsWdwWPtr4qx)',
-            "db.connectionString": '10.30.31.120/mobility',
+            "db.connectionString": '10.40.23.88/corptech',
         ]
     ]
 }
