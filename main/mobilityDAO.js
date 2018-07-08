@@ -3,13 +3,14 @@
 let o_o = require('yield-yield'),
     database = require('./database.js');
 
-const GET_TOKEN='begin get_token(:mobile_num, :token); end;';
+const GET_TOKEN='begin get_token(:mobile_num, :player_id, :token); end;';
 
-let getToken = o_o(function *(mobile_num)
+let getToken = o_o(function *(mobile_num, player_id)
 {
     let bindvars =
     {
          mobile_num: mobile_num,
+         player_id: player_id,
          token: { type: database.oracle.STRING, dir: database.oracle.BIND_OUT },
     };
 

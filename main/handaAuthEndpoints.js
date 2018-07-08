@@ -32,7 +32,7 @@ instance.post('/handa/api/auth/authenticate', o_o(function *(req, res, next)
 
         if(response[0].statusCode == 200)
         {
-            let tokenFromDb = yield mobilityDAO.getToken(req.body.mobileNumber, yield);
+            let tokenFromDb = yield mobilityDAO.getToken(req.body.mobileNumber, req.body.playerID || null, yield);
             let json =
             {
                 token: tokenFromDb
@@ -61,7 +61,7 @@ instance.post('/handa/api/auth/authenticate2', o_o(function *(req, res, next)
 
         if(response[0].statusCode == 200)
         {
-            let tokenFromDb = yield mobilityDAO.getToken(req.body.mobileNumber, yield);
+            let tokenFromDb = yield mobilityDAO.getToken(req.body.mobileNumber, req.body.playerID || null, yield);
             let json =
             {
                 token: tokenFromDb
@@ -90,7 +90,7 @@ instance.post('/handa/api/auth/authenticate3', o_o(function *(req, res, next)
 
         if(response[0].statusCode == 200)
         {
-            let tokenFromDb = yield mobilityDAO.getToken(req.body.mobileNumber, yield);
+            let tokenFromDb = yield mobilityDAO.getToken(req.body.mobileNumber, req.body.playerID || null, yield);
             let json =
             {
                 token: tokenFromDb
