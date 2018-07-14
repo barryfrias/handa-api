@@ -24,7 +24,8 @@ let whiteListed =
      /^\/handa\/api\/users\/ldap\/search/,
      /^\/handa\/api\/users\/registration*/,
      /^\/handa\/api\/users\/verify/,
-     /^\/handa\/api\/users\/companies/
+     /^\/handa\/api\/users\/companies/,
+     /^\/handa\/jobs\/.*/
 ];
 
 function isWhiteListed(url)

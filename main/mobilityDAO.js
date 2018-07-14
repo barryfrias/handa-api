@@ -44,9 +44,22 @@ let deleteToken = o_o(function *(token)
     let result = yield database.executeProcNoResult(DELETE_TOKEN, bindvars);
 });
 
+const GET_PENDING_OUTBOUND_NOTIF='begin get_pending_outbound_notif(:p_cursor); end;';
+
+let getPendingNotif = o_o(function *()
+{
+    let bindvars =
+    {
+         p_cursor: { type: database.oracle.CURSOR, dir: database.oracle.BIND_OUT }
+    };
+    let result = yield database.executeProc(GET_PENDING_OUTBOUND_NOTIF, bindvars, { outFormat: database.oracle.OBJECT }, true, yield);
+    return result.rows;
+});
+
 module.exports =
 {
     getToken: getToken,
     checkToken: checkToken,
-    deleteToken: deleteToken
+    deleteToken: deleteToken,
+    getPendingNotif: getPendingNotif
 };
