@@ -42,6 +42,7 @@ instance.post('/handa/jobs/notification/processor', o_o(function *(req, res, nex
                 data: {
                     id: null,
                     title: null,
+                    message: null,
                     type: 'PUBLIC'
                 },
                 headings: {
@@ -58,8 +59,9 @@ instance.post('/handa/jobs/notification/processor', o_o(function *(req, res, nex
         }
         for(let val of map.values())
         {
-            json.id = val.newsFeedId;
-            json.title = val.title;
+            json.data.id = val.newsFeedId;
+            json.data.title = val.title;
+            json.data.message = val.message;
             json.headings.en = val.title;
             json.contents.en = val.message;
             for(let playerIds of val.playerIdsArrayofArrays)
