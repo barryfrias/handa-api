@@ -62,6 +62,7 @@ instance.post('/handa/jobs/notification/processor', o_o(function *(req, res, nex
             json.data.id = val.newsFeedId;
             json.data.title = val.title;
             json.data.message = val.message;
+            json.data.type = val.type;
             json.headings.en = val.title;
             json.contents.en = val.message;
             for(let playerIds of val.playerIdsArrayofArrays)
@@ -99,7 +100,8 @@ function process(fromDb)
                 playerIds: [e.PLAYER_ID],
                 newsFeedId: e.NEWSFEED_ID,
                 title: e.TITLE,
-                message: e.MESSAGE
+                message: e.MESSAGE,
+                type: e.TYPE
             }
             map.set(e.NEWSFEED_ID, val);
         }
