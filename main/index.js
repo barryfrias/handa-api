@@ -1,5 +1,7 @@
 'use strict';
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+
 let o_o = require('yield-yield'),
     conf = require('./properties.js'),
     logger = require('./logger.js').log,

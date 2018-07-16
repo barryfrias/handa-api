@@ -44,7 +44,7 @@ let deleteToken = o_o(function *(token)
     let result = yield database.executeProcNoResult(DELETE_TOKEN, bindvars);
 });
 
-const GET_PENDING_OUTBOUND_NOTIF='begin get_pending_outbound_notif(:p_cursor); end;';
+const GET_PENDING_OUTBOUND_NOTIF='begin handa_notif.get_pending_outbound_notif(:p_cursor); end;';
 
 let getPendingNotif = o_o(function *()
 {
@@ -56,10 +56,30 @@ let getPendingNotif = o_o(function *()
     return result.rows;
 });
 
+const UPDATE_NOTIF='begin handa_notif.update_notif(:p_playerIds, :p_wsResponse, :p_count); end;';
+
+let updateNotifications = o_o(function *(playerIds, wsResponse)
+{
+    if(!playerIds || playerIds.length == 0)
+    {
+        playerIds = [''];
+    }
+    let bindvars =
+    {
+         p_playerIds: { type: database.oracle.STRING, dir: database.oracle.BIND_IN, maxSize: 128, val: playerIds },
+         p_wsResponse: wsResponse,
+         p_count: { type: database.oracle.NUMBER, dir: database.oracle.BIND_OUT }
+    };
+
+    let result = yield database.executeProc(UPDATE_NOTIF, bindvars, {}, false, yield);
+    return result.p_count;
+});
+
 module.exports =
 {
     getToken: getToken,
     checkToken: checkToken,
     deleteToken: deleteToken,
-    getPendingNotif: getPendingNotif
+    getPendingNotif: getPendingNotif,
+    updateNotifications: updateNotifications
 };

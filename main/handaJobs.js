@@ -7,36 +7,74 @@ let o_o = require('yield-yield'),
 
 let httpTimeout = conf['http.timeout'];
 
-function getRequestOptions(req)
+function getRequestOptions(json)
 {
     return {
         headers:
         {
             "Content-Type": 'application/json',
-            "Accept": 'application/json'
+            "Accept": 'application/json',
+            authorization: 'Basic ODVkYWFjODYtODU5OS00OTQwLWI5MTQtNTk0MTVhZTIwNThj'
         },
         url: conf['oneSignalUrl'],
+        proxy: conf['proxyUrl'],
+        strictSSL: false,
+        tunnel: true,
+        followAllRedirects: true,
         timeout: httpTimeout,
         json: true,
-        body: req.body
+        body: json
     }
 }
 
+//This endpoint is typically called via curl that is run thru cron
 instance.post('/handa/jobs/notification/processor', o_o(function *(req, res, next)
 {
     logger.info({time: new Date().toString(), req:req});
     try
     {
-        res.send(200, { message: 'Ok' });
-        next();
         let fromDb = yield mobilityDAO.getPendingNotif(yield);
         let map = process(fromDb);
-        console.log(map); //TODO: DELETE ME
+        let json =
+        {
+                app_id: 'dff70da9-fa80-4ca5-9480-d92cf9c36dc4',
+                include_player_ids: [],
+                data: {
+                    id: null,
+                    title: null,
+                    type: 'PUBLIC'
+                },
+                headings: {
+                    en: null // title
+                },
+                contents: {
+                    en: null // message
+                },
+                small_icon: 'push_notif_large',
+                large_icon: 'push_notif_large',
+                mutable_content: true,
+                ios_badgeType: 'Increase',
+                ios_badgeCount: 1
+        }
+        for(let val of map.values())
+        {
+            json.id = val.newsFeedId;
+            json.title = val.title;
+            json.headings.en = val.title;
+            json.contents.en = val.message;
+            for(let playerIds of val.playerIdsArrayofArrays)
+            {
+                json.include_player_ids = playerIds;
+                let response = yield request.post(getRequestOptions(json), yield);
+                let updateCount = yield mobilityDAO.updateNotifications(playerIds, JSON.stringify(response[1]), yield);
+            }
+        }
+        res.send(200, { message: 'Ok' });
     }
     catch(err)
     {
         logger.error(err);
-        return res.send(err);
+        res.send(err);
     }
     return next();
 }));
@@ -58,6 +96,7 @@ function process(fromDb)
             {
                 playerIds: [e.PLAYER_ID],
                 newsFeedId: e.NEWSFEED_ID,
+                title: e.TITLE,
                 message: e.MESSAGE
             }
             map.set(e.NEWSFEED_ID, val);
