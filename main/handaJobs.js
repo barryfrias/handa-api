@@ -33,8 +33,6 @@ instance.post('/handa/jobs/notification/processor', o_o(function *(req, res, nex
     logger.info({time: new Date().toString(), req:req});
     try
     {
-        let fromDb = yield mobilityDAO.getPendingNotif(yield);
-        let map = process(fromDb);
         let json =
         {
                 app_id: 'dff70da9-fa80-4ca5-9480-d92cf9c36dc4',
@@ -43,7 +41,7 @@ instance.post('/handa/jobs/notification/processor', o_o(function *(req, res, nex
                     id: null,
                     title: null,
                     message: null,
-                    type: 'PUBLIC'
+                    type: null
                 },
                 headings: {
                     en: null // title
@@ -56,7 +54,9 @@ instance.post('/handa/jobs/notification/processor', o_o(function *(req, res, nex
                 mutable_content: true,
                 ios_badgeType: 'Increase',
                 ios_badgeCount: 1
-        }
+        };
+        let fromDb = yield mobilityDAO.getPendingNotif(yield);
+        let map = process(fromDb);
         for(let val of map.values())
         {
             json.data.id = val.newsFeedId;
@@ -116,7 +116,6 @@ function process(fromDb)
             val.playerIdsArrayofArrays.push(arr);
         }
         delete val.playerIds;
-        console.log(val); //TODO: DELETE ME
     }
     return map;
 }
