@@ -59,12 +59,12 @@ instance.post('/handa/jobs/notification/processor', o_o(function *(req, res, nex
         let map = process(fromDb);
         for(let val of map.values())
         {
-            json.data.id = val.newsFeedId;
-            json.data.title = val.title;
-            json.data.message = val.message;
-            json.data.type = val.type;
-            json.headings.en = val.title;
-            json.contents.en = val.message;
+            json.data.id = val.NEWSFEED_ID;
+            json.data.title = val.TITLE;
+            json.data.message = val.MESSAGE;
+            json.data.type = val.TYPE;
+            json.headings.en = val.TITLE;
+            json.contents.en = val.MESSAGE;
             for(let playerIds of val.playerIdsArrayofArrays)
             {
                 json.include_player_ids = playerIds;
@@ -72,6 +72,7 @@ instance.post('/handa/jobs/notification/processor', o_o(function *(req, res, nex
                 let updateCount = yield mobilityDAO.updateNotifications(playerIds, JSON.stringify(response[1]), yield);
             }
         }
+        map.clear();
         res.send(200, { message: 'Ok' });
     }
     catch(err)
@@ -86,7 +87,8 @@ function process(fromDb)
 {
     let map = new Map();
     //group notifications by newsfeed id
-    for(let e of fromDb)
+    let e;
+    while((e = fromDb.pop()))
     {
         let val = map.get(e.NEWSFEED_ID);
         if(val)
@@ -95,15 +97,8 @@ function process(fromDb)
         }
         else
         {
-            val =
-            {
-                playerIds: [e.PLAYER_ID],
-                newsFeedId: e.NEWSFEED_ID,
-                title: e.TITLE,
-                message: e.MESSAGE,
-                type: e.TYPE
-            }
-            map.set(e.NEWSFEED_ID, val);
+            e.playerIds = [e.PLAYER_ID];
+            map.set(e.NEWSFEED_ID, e);
         }
     }
 
