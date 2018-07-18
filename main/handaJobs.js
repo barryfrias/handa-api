@@ -56,23 +56,26 @@ instance.post('/handa/jobs/notification/processor', o_o(function *(req, res, nex
                 ios_badgeCount: 1
         };
         let fromDb = yield mobilityDAO.getPendingNotif(yield);
-        let map = process(fromDb);
-        for(let val of map.values())
+        if(fromDb && fromDb.length)
         {
-            json.data.id = val.NEWSFEED_ID;
-            json.data.title = val.TITLE;
-            json.data.message = val.MESSAGE;
-            json.data.type = val.TYPE;
-            json.headings.en = val.TITLE;
-            json.contents.en = val.MESSAGE;
-            for(let playerIds of val.playerIdsArrayofArrays)
+            let map = process(fromDb);
+            for(let val of map.values())
             {
-                json.include_player_ids = playerIds;
-                let response = yield request.post(getRequestOptions(json), yield);
-                let updateCount = yield mobilityDAO.updateNotifications(playerIds, JSON.stringify(response[1]), yield);
+                json.data.id = val.NEWSFEED_ID;
+                json.data.title = val.TITLE;
+                json.data.message = val.MESSAGE;
+                json.data.type = val.TYPE;
+                json.headings.en = val.TITLE;
+                json.contents.en = val.MESSAGE;
+                for(let playerIds of val.playerIdsArrayofArrays)
+                {
+                    json.include_player_ids = playerIds;
+                    let response = yield request.post(getRequestOptions(json), yield);
+                    let updateCount = yield mobilityDAO.updateNotifications(playerIds, JSON.stringify(response[1]), yield);
+                }
             }
+            map.clear();
         }
-        map.clear();
         res.send(200, { message: 'Ok' });
     }
     catch(err)
