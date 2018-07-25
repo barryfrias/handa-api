@@ -1,5 +1,5 @@
 group = 'com.pldt.itidm'
-version = '1.1.0'
+version = '1.1.1'
 
 ext {
     appName = 'handa-api'
