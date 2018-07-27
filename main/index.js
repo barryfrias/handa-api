@@ -1,5 +1,7 @@
 'use strict';
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+
 let o_o = require('yield-yield'),
     conf = require('./properties.js'),
     logger = require('./logger.js').log,
@@ -21,6 +23,7 @@ o_o.run(function *()
     {
         require('./handaAuthEndpoints.js'); logger.info({time: new Date().toString()}, 'Loaded handa auth api endpoints');
         require('./handaEndpoints.js'); logger.info({time: new Date().toString()}, 'Loaded handa api endpoints');
+        require('./handaJobs.js'); logger.info({time: new Date().toString()}, 'Loaded handa jobs endpoints');
         logger.info({time: new Date().toString()}, `${server.name} listening at ${server.url}`);
     });
 });
