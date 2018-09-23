@@ -9,12 +9,9 @@ let httpTimeout = conf['http.timeout'];
 
 function getHandaOpts(req, url)
 {
-    let options =
+    let options = 
     {
-        headers:
-        {
-            "Content-Type": 'application/json'
-        },
+        headers: req.headers,
         url: url,
         timeout: httpTimeout,
         body: req.body,
@@ -22,6 +19,35 @@ function getHandaOpts(req, url)
     };
     return options;
 }
+
+instance.post('/handa/api/auth/authorize', o_o(function *(req, res, next)
+{
+    logger.info({time: new Date().toString(), req:req});
+    try
+    {
+        let response = yield request.post(getHandaOpts(req, conf['handaUrl'] + '/users/verify'), yield);
+
+        if(response[0].statusCode == 200)
+        {
+            if('ldap' === response[1].authMethod)
+            {
+                let nonce = yield mobilityDAO.getNonce(req.body.mobileNumber, yield);
+                response[1].nonce = nonce;
+            }
+            res.send(response[1]);
+        }
+        else
+        {
+            res.send(response[0].statusCode, { message: response[1] });
+        }
+    }
+    catch(err)
+    {
+        logger.error(err);
+        return res.send(err);
+    }
+    return next();
+}));
 
 instance.post('/handa/api/auth/authenticate', o_o(function *(req, res, next)
 {

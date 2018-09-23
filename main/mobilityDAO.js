@@ -75,11 +75,26 @@ let updateNotifications = o_o(function *(playerIds, wsResponse)
     return result.p_count;
 });
 
+const GET_NONCE='begin get_nonce(:mobile_num, :nonce); end;';
+
+let getNonce = o_o(function *(mobile_num)
+{
+    let bindvars =
+    {
+         mobile_num: mobile_num,
+         nonce: { type: database.oracle.STRING, dir: database.oracle.BIND_OUT },
+    };
+
+    let result = yield database.executeProc(GET_NONCE, bindvars, {}, false, yield);
+    return result.nonce;
+});
+
 module.exports =
 {
     getToken: getToken,
     checkToken: checkToken,
     deleteToken: deleteToken,
     getPendingNotif: getPendingNotif,
-    updateNotifications: updateNotifications
+    updateNotifications: updateNotifications,
+    getNonce: getNonce
 };
