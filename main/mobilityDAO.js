@@ -89,6 +89,22 @@ let getNonce = o_o(function *(mobile_num)
     return result.nonce;
 });
 
+const LOGIN_BY_NONCE='begin handa_users_auth.login_by_nonce(:mobile_num, :username, :nonce, :output); end;';
+
+let loginByNonce = o_o(function *(mobile_num, username, nonce)
+{
+    let bindvars =
+    {
+         mobile_num: mobile_num,
+         username: username,
+         nonce: nonce,
+         output: { type: database.oracle.STRING, dir: database.oracle.BIND_OUT },
+    };
+
+    let result = yield database.executeProc(LOGIN_BY_NONCE, bindvars, {}, false, yield);
+    return result.output;
+});
+
 module.exports =
 {
     getToken: getToken,
@@ -96,5 +112,6 @@ module.exports =
     deleteToken: deleteToken,
     getPendingNotif: getPendingNotif,
     updateNotifications: updateNotifications,
-    getNonce: getNonce
+    getNonce: getNonce,
+    loginByNonce: loginByNonce
 };

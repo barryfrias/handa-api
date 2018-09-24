@@ -152,3 +152,59 @@ instance.post('/handa/api/auth/logout', o_o(function *(req, res, next)
     }
     return next();
 }));
+
+instance.post('/handa/api/auth/adfs/callback', o_o(function *(req, res, next)
+{
+    logger.info({time: new Date().toString(), req:req});
+
+    if(!req.body)
+    {
+        res.send(400, { message: "Request json body should not be empty" });
+        return next();
+    }
+
+    if(!req.body.mobileNumber)
+    {
+        res.send(400, { message: "mobileNumber should not be empty or null" });
+        return next();
+    }
+    if(!req.body.username)
+    {
+        res.send(400, { message: "username should not be empty or null" });
+        return next();
+    }
+    if(!req.body.nonce)
+    {
+        res.send(400, { message: "nonce should not be empty or null" });
+        return next();
+    }
+    if(!req.body.playerID)
+    {
+        res.send(400, { message: "playerID should not be empty or null" });
+        return next();
+    }
+
+    try
+    {
+        let result = yield mobilityDAO.loginByNonce(req.body.mobileNumber, req.body.username, req.body.nonce, yield);
+        if('OK' !== result)
+        {
+            res.send(401, { message: result });
+            return next();
+        }
+
+        let tokenFromDb = yield mobilityDAO.getToken(req.body.mobileNumber, req.body.playerID, yield);
+        let json =
+        {
+            token: tokenFromDb
+        }
+        res.send(json);
+        return next();
+    }
+    catch(err)
+    {
+        logger.error(err);
+        return res.send(err);
+    }
+    return next();
+}));
