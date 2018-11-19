@@ -66,7 +66,7 @@ let updateNotifications = o_o(function *(playerIds, wsResponse)
     }
     let bindvars =
     {
-         p_playerIds: { type: database.oracle.STRING, dir: database.oracle.BIND_IN, maxSize: 128, val: playerIds },
+         p_playerIds: { type: database.oracle.STRING, dir: database.oracle.BIND_IN, maxSize: 4000, val: playerIds },
          p_wsResponse: wsResponse,
          p_count: { type: database.oracle.NUMBER, dir: database.oracle.BIND_OUT }
     };

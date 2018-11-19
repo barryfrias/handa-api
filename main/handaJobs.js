@@ -5,7 +5,7 @@ let o_o = require('yield-yield'),
     mobilityDAO = require('./mobilityDAO.js'),
     instance = require('./server.js').instance;
 
-let httpTimeout = conf['http.timeout'];
+let httpTimeout = conf['request.timeout'];
 
 function getRequestOptions(json)
 {
@@ -71,7 +71,12 @@ instance.post('/handa/jobs/notification/processor', o_o(function *(req, res, nex
                 {
                     json.include_player_ids = playerIds;
                     let response = yield request.post(getRequestOptions(json), yield);
-                    let updateCount = yield mobilityDAO.updateNotifications(playerIds, JSON.stringify(response[1]), yield);
+                    let resString = JSON.stringify(response[1]);
+                    if(typeof resString === 'string' || resString instanceof String)
+                    {
+                        resString = resString.substring(0, 1000);
+                    }
+                    let updateCount = yield mobilityDAO.updateNotifications(playerIds, resString, yield);
                 }
             }
             map.clear();
