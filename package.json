@@ -1,6 +1,6 @@
 {
   "name": "handa-api",
-  "version": "1.1.1",
+  "version": "1.2.1",
   "description": "Handa Api REST Web Service",
   "main": "./main/index.js",
   "scripts": {
