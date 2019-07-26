@@ -136,6 +136,33 @@ instance.post('/handa/api/auth/authenticate3', o_o(function *(req, res, next)
     return next();
 }));
 
+instance.post('/handa/api/auth/authenticate4', o_o(function *(req, res, next)
+{
+    logger.info({time: new Date().toString(), req:req});
+    try
+    {
+        let response = yield request.post(getHandaOpts(req, conf['handaUrl'] + '/users/authenticate4'), yield);
+
+        if(response[0].statusCode == 200)
+        {
+            let tokenFromDb = yield mobilityDAO.getToken(req.body.mobileNumber, req.body.playerID || null, yield);
+            let json = response[1];
+            json.token = tokenFromDb;
+            res.send(json);
+            return next();
+        }
+
+        res.send(response[0].statusCode, response[1]);
+        return next();
+    }
+    catch(err)
+    {
+        logger.error(err);
+        return res.send(err);
+    }
+    return next();
+}));
+
 instance.post('/handa/api/auth/logout', o_o(function *(req, res, next)
 {
     logger.info({time: new Date().toString(), req:req});
