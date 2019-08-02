@@ -66,7 +66,7 @@ let updateNotifications = o_o(function *(playerIds, wsResponse)
     }
     let bindvars =
     {
-         p_playerIds: { type: database.oracle.STRING, dir: database.oracle.BIND_IN, maxSize: 128, val: playerIds },
+         p_playerIds: { type: database.oracle.STRING, dir: database.oracle.BIND_IN, maxSize: 4000, val: playerIds },
          p_wsResponse: wsResponse,
          p_count: { type: database.oracle.NUMBER, dir: database.oracle.BIND_OUT }
     };
@@ -75,11 +75,43 @@ let updateNotifications = o_o(function *(playerIds, wsResponse)
     return result.p_count;
 });
 
+const GET_NONCE='begin get_nonce(:mobile_num, :nonce); end;';
+
+let getNonce = o_o(function *(mobile_num)
+{
+    let bindvars =
+    {
+         mobile_num: mobile_num,
+         nonce: { type: database.oracle.STRING, dir: database.oracle.BIND_OUT },
+    };
+
+    let result = yield database.executeProc(GET_NONCE, bindvars, {}, false, yield);
+    return result.nonce;
+});
+
+const LOGIN_BY_NONCE='begin handa_users_auth.login_by_nonce(:mobile_num, :username, :nonce, :output); end;';
+
+let loginByNonce = o_o(function *(mobile_num, username, nonce)
+{
+    let bindvars =
+    {
+         mobile_num: mobile_num,
+         username: username,
+         nonce: nonce,
+         output: { type: database.oracle.STRING, dir: database.oracle.BIND_OUT },
+    };
+
+    let result = yield database.executeProc(LOGIN_BY_NONCE, bindvars, {}, false, yield);
+    return result.output;
+});
+
 module.exports =
 {
     getToken: getToken,
     checkToken: checkToken,
     deleteToken: deleteToken,
     getPendingNotif: getPendingNotif,
-    updateNotifications: updateNotifications
+    updateNotifications: updateNotifications,
+    getNonce: getNonce,
+    loginByNonce: loginByNonce
 };

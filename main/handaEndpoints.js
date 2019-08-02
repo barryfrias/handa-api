@@ -12,11 +12,7 @@ let httpTimeout = conf['http.timeout'];
 function getOptionsForHanda(req)
 {
     return {
-        headers:
-        {
-            "Content-Type": 'application/json',
-            "Accept": 'application/json'
-        },
+        headers: req.headers,
         url: conf['handaUrl'] + '/' + req.params[0] + getQueryPart(req.url),
         timeout: httpTimeout,
         json: true,
