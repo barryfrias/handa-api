@@ -151,7 +151,6 @@ instance.post('/handa/api/auth/authenticate4', o_o(function *(req, res, next)
             // check if user is a manager
             let isManagerUrl = `${conf['handaUrl']}/users/${json.adUsername}/subordinates/prompts?company=${json.company}&startDate=19000101&endDate=19000101`;
             response = yield request.get(getHandaOpts({'Accept':'application/json'}, isManagerUrl), yield);
-            console.log(response);
             json.isManager = response[1].isManager;
             res.send(json);
             return next();
